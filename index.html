@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="BCIT Campus Maps - Explore all BCIT campuses with interactive maps and detailed information.">
+    <meta name="theme-color" content="#003366">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BCIT Campus">
+    <link rel="apple-touch-icon" href="images/icons/icon-192.png">
+    
+    <title>BCIT Campus Maps</title>
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/icons/icon-192.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="js/app.js" as="script">
+    <link rel="preload" href="images/1.jpg" as="image">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading BCIT Campus Maps...</p>
+    </div>
+
+    <!-- Header -->
+    <header role="banner">
+        <div class="header-content">
+            <h1 class="site-title">BCIT Campus Maps</h1>
+            <p class="site-subtitle">British Columbia Institute of Technology</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main role="main" id="main-content" style="display: none;">
+        <!-- Campus Selector -->
+        <section class="selector-section" aria-labelledby="campus-selector-title">
+            <div class="container">
+                <h2 id="campus-selector-title" class="section-title">Select Campus</h2>
+                <div class="campus-selector">
+                    <label for="campus-select" class="selector-label">Choose BCIT Campus:</label>
+                    <div class="select-wrapper">
+                        <select id="campus-select" class="campus-dropdown" aria-label="Select BCIT campus">
+                            <option value="" disabled selected>Select a campus...</option>
+                            <option value="1">Burnaby Campus (Main)</option>
+                            <option value="2">Downtown Campus</option>
+                            <option value="3">Marine Campus</option>
+                            <option value="4">Aerospace Technology Campus</option>
+                            <option value="5">Annacis Island Campus</option>
+                        </select>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="campus-info" id="campus-info" aria-live="polite">
+                        <!-- Dynamic campus info will appear here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Campus Map -->
+        <section class="map-section" aria-labelledby="map-title">
+            <div class="container">
+                <h2 id="map-title" class="section-title">Campus Map</h2>
+                <div class="map-container">
+                    <div class="map-wrapper">
+                        <img id="campus-map" 
+                             src="images/1.jpg" 
+                             alt="Burnaby Campus Map - Main BCIT Campus"
+                             class="campus-image"
+                             loading="lazy">
+                        <div class="map-overlay">
+                            <button id="zoom-in" class="zoom-btn" aria-label="Zoom in">+</button>
+                            <button id="zoom-out" class="zoom-btn" aria-label="Zoom out">-</button>
+                            <button id="reset-zoom" class="zoom-btn" aria-label="Reset zoom">⟲</button>
+                        </div>
+                    </div>
+                    <div class="map-caption">
+                        <p id="current-campus">Currently viewing: Burnaby Campus</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Campus Details -->
+        <section class="details-section" aria-labelledby="details-title">
+            <div class="container">
+                <h2 id="details-title" class="section-title">Campus Information</h2>
+                <div class="campus-details">
+                    <div class="details-card">
+                        <h3>Facilities & Development</h3>
+                        <p>Facilities and Campus Development is responsible for planning, constructing, maintaining and operating educational and research facilities on behalf of the Institute.</p>
+                    </div>
+                    <div class="details-card">
+                        <h3>Campus Network</h3>
+                        <p>BCIT provides a diverse range of services required to manage almost 213,000 sq. m. (2,290,000 sq. ft.) of facilities located at five sites across Metro Vancouver.</p>
+                    </div>
+                    <div class="details-card">
+                        <h3>Quick Links</h3>
+                        <div class="links-grid">
+                            <a href="https://www.bcit.ca/" target="_blank" rel="noopener noreferrer" class="link-button">
+                                <span class="link-icon">🌐</span>
+                                BCIT Official Website
+                            </a>
+                            <a href="https://www.bcit.ca/maps/" target="_blank" rel="noopener noreferrer" class="link-button">
+                                <span class="link-icon">🗺️</span>
+                                Interactive Campus Maps
+                            </a>
+                            <button id="install-btn" class="link-button install-button" style="display: none;">
+                                <span class="link-icon">⬇️</span>
+                                Install App
+                            </button>
+                            <button id="offline-toggle" class="link-button offline-button">
+                                <span class="link-icon" id="offline-icon">📶</span>
+                                <span id="offline-text">Online</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <p class="footer-text">British Columbia Institute of Technology</p>
+                    <p class="footer-text">3700 Willingdon Avenue, Burnaby, BC V5G 3H2</p>
+                </div>
+                <div class="footer-credit">
+                    <p class="footer-text">Developed by Mahsa Khakpour</p>
+                    <p class="footer-version" id="app-version">Version 1.0.0</p>
+                </div>
+                <div class="footer-status">
+                    <p class="footer-text" id="cache-status">Ready to work offline</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // Show main content when loaded
+        window.addEventListener('load', function() {
+            const spinner = document.getElementById('loading-spinner');
+            const mainContent = document.getElementById('main-content');
+            
+            spinner.style.opacity = '0';
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                mainContent.style.display = 'block';
+            }, 300);
+            
+            // Register Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js', {
+                    scope: './'
+                }).then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                    
+                    // Check for updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        console.log('New Service Worker installing...');
+                    });
+                    
+                }).catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+                
+                // Listen for controller changes
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    console.log('Service Worker controller changed');
+                });
+            }
+            
+            // Network status
+            updateNetworkStatus();
+            window.addEventListener('online', updateNetworkStatus);
+            window.addEventListener('offline', updateNetworkStatus);
+            
+            function updateNetworkStatus() {
+                const offlineIcon = document.getElementById('offline-icon');
+                const offlineText = document.getElementById('offline-text');
+                
+                if (navigator.onLine) {
+                    offlineIcon.textContent = '📶';
+                    offlineText.textContent = 'Online';
+                    document.body.classList.remove('offline');
+                } else {
+                    offlineIcon.textContent = '📴';
+                    offlineText.textContent = 'Offline';
+                    document.body.classList.add('offline');
+                }
+            }
+        });
+        
+        // Before install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const installBtn = document.getElementById('install-btn');
+            installBtn.style.display = 'flex';
+            
+            installBtn.addEventListener('click', () => {
+                installBtn.style.display = 'none';
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted install');
+                    }
+                    deferredPrompt = null;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

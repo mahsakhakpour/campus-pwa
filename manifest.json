@@ -1,0 +1,98 @@
+{
+  "name": "BCIT Campus Maps",
+  "short_name": "BCIT Maps",
+  "description": "Interactive maps and information for all BCIT campuses. Works offline.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait-primary",
+  "background_color": "#003366",
+  "theme_color": "#003366",
+  "categories": ["education", "navigation", "travel"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "./",
+  "id": "/",
+  "icons": [
+    {
+      "src": "./images/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./images/icons/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./images/screenshot-mobile.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "BCIT Campus Maps Mobile App"
+    },
+    {
+      "src": "./images/screenshot-desktop.jpg",
+      "sizes": "1920x1080",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "BCIT Campus Maps Desktop App"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Burnaby Campus",
+      "short_name": "Burnaby",
+      "description": "View Burnaby Campus Map",
+      "url": "./index.html?campus=1",
+      "icons": [{ "src": "./images/icons/shortcut-burnaby.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "All Campuses",
+      "short_name": "All",
+      "description": "Browse all BCIT campuses",
+      "url": "./index.html",
+      "icons": [{ "src": "./images/icons/shortcut-all.png", "sizes": "96x96" }]
+    }
+  ]
+}

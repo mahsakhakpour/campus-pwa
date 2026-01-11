@@ -1,0 +1,5 @@
+user-agent: *
+Allow: /
+Disallow" /admin/
+
+sitemap: https://mahsakhakpour.github.io/campus-pwa/sitemap.xml
