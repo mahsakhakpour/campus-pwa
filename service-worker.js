@@ -7,17 +7,17 @@ const APP_NAME = 'BCIT Campus Maps';
 const CACHE_VERSION = 'v2.1.0';
 const CACHE_NAME = `${APP_NAME}-${CACHE_VERSION}`;
 
-// Core assets to cache on install
+// Assets that are safe to cache aggressively
 const CORE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './robots.txt',
 
-  // JavaScript
+  // JS
   './js/app.js',
 
-  // Images - Campus maps
+  // Images
   './images/1.jpg',
   './images/2.jpg',
   './images/3.jpg',
@@ -35,55 +35,44 @@ const CORE_ASSETS = [
   './images/icons/icon-512.png'
 ];
 
-/**
- * Install event
- */
+// ---------------- INSTALL ----------------
 self.addEventListener('install', event => {
-  console.log(`[Service Worker] Installing ${CACHE_NAME}`);
-
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(CORE_ASSETS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache => cache.addAll(CORE_ASSETS))
   );
+  self.skipWaiting();
 });
 
-/**
- * Activate event - clean old caches
- */
+// ---------------- ACTIVATE ----------------
 self.addEventListener('activate', event => {
-  console.log('[Service Worker] Activating');
-
   event.waitUntil(
-    caches.keys().then(cacheNames =>
+    caches.keys().then(names =>
       Promise.all(
-        cacheNames.map(cache => {
-          if (cache.startsWith(APP_NAME) && cache !== CACHE_NAME) {
-            console.log('[Service Worker] Deleting old cache:', cache);
-            return caches.delete(cache);
+        names.map(name => {
+          if (name.startsWith(APP_NAME) && name !== CACHE_NAME) {
+            return caches.delete(name);
           }
         })
       )
-    ).then(() => self.clients.claim())
+    )
   );
+  self.clients.claim();
 });
 
-/**
- * Fetch event
- */
+// ---------------- FETCH ----------------
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
-  const requestUrl = new URL(event.request.url);
+  const url = new URL(event.request.url);
 
-  /* ===== CSS: Network first (IMPORTANT FIX) ===== */
-  if (requestUrl.pathname.endsWith('.css')) {
+  // 1️⃣ CSS: network-first (THIS IS THE FIX)
+  if (url.pathname.endsWith('.css')) {
     event.respondWith(
       fetch(event.request)
         .then(response => {
-          const responseClone = response.clone();
+          const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
+            cache.put(event.request, clone);
           });
           return response;
         })
@@ -92,45 +81,34 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  /* ===== HTML & Images: Cache first ===== */
-  event.respondWith(
-    caches.match(event.request)
-      .then(cachedResponse => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-
-        return fetch(event.request)
-          .then(response => {
-            if (!response || response.status !== 200) {
-              return response;
-            }
-
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseClone);
-            });
-
-            return response;
-          })
-          .catch(() => {
-            if (event.request.headers.get('Accept')?.includes('text/html')) {
-              return caches.match('./index.html');
-            }
-
-            if (event.request.destination === 'image') {
-              return caches.match('./images/1.jpg');
-            }
+  // 2️⃣ HTML: network-first
+  if (event.request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put('./index.html', clone);
           });
-      })
-  );
-});
-
-/**
- * Message event
- */
-self.addEventListener('message', event => {
-  if (event.data === 'SKIP_WAITING') {
-    self.skipWaiting();
+          return response;
+        })
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
   }
+
+  // 3️⃣ Everything else: cache-first
+  event.respondWith(
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+
+      return fetch(event.request).then(response => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, clone);
+        });
+        return response;
+      });
+    })
+  );
 });
