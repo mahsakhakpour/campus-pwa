@@ -1,5 +1,5 @@
-user-agent: *
+User-agent: *
 Allow: /
-Disallow" /admin/
+Disallow: /admin/
 
-sitemap: https://mahsakhakpour.github.io/campus-pwa/sitemap.xml
+Sitemap: https://mahsakhakpour.github.io/campus-pwa/sitemap.xml
